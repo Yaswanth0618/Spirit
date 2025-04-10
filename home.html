@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spirit - Smarter Plans, Stronger You</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <i class="ri-leaf-fill"></i>
+                <span>Spirit</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li>
+                    <button onclick="location.href='index.html'" class="signout-button">Sign Out</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Smarter Plans, Stronger You</h1>
+            <p>Spirit helps you organize your life, boost productivity, and achieve your goals with intelligent planning tools designed for modern lifestyles.</p>
+        </div>
+    </section>
+
+    
+
+    <!-- ChronoBuddy Dashboard Section -->
+    <section class="dashboard-section" id="dashboard">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>SpiritBuddy Dashboard</h2>
+                <p>Your Time Travel Companion for Productivity. Not your average calendar or to-do app. Spirit adapts to your needs with live mood tracking, AI-powered dynamic scheduling, calming soundtracks, and a visual time map that evolves in real-time.</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <!-- Task Portal -->
+                <div class="dashboard-card">
+                    <h3>Task Portal</h3>
+                    <input type="text" id="taskName" placeholder="Task Name" class="dashboard-input" />
+                    <input type="number" id="duration" placeholder="Duration (mins)" class="dashboard-input" />
+                    <input type="datetime-local" id="deadline" class="dashboard-input" />
+                    <select id="priority" class="dashboard-select">
+                        <option value="low">Low Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    <button onclick="addTask()" class="dashboard-button">Add Task</button>
+                    <ul id="taskList" class="task-list"></ul>
+                </div>
+
+                <!-- Mood Tracker -->
+                <div class="dashboard-card">
+                    <h3>Mood Tracker</h3>
+                    <div id="moodOptions" style="text-align: center;">
+                        <span class="emoji" onclick="setMood('😊')">😊</span>
+                        <span class="emoji" onclick="setMood('😐')">😐</span>
+                        <span class="emoji" onclick="setMood('😞')">😞</span>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem;">Current Mood: <span id="currentMood">None</span></p>
+                    <audio id="relaxAudio" controls style="display:none; width: 100%; margin-top: 1rem;">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <audio id="focusAudio" controls style="display:none; width: 100%; margin-top: 1rem;">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+
+                <!-- Dynamic Timeline -->
+                <div class="dashboard-card">
+                    <h3>Today's Time Map</h3>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+
+                <!-- Task Timer -->
+                <div class="dashboard-card">
+                    <h3>Task Timer</h3>
+                    <select id="taskSelect" class="dashboard-select"></select>
+                    <button onclick="startTimer()" class="dashboard-button">Start Task</button>
+                    <div id="timerDisplay" class="timer-display">00:00</div>
+                    <div id="productivity-feedback" class="feedback"></div>
+                    <button onclick="stopTimer()" class="dashboard-button" style="background: #ef4444;">Stop Timer</button>
+                </div>
+
+                <!-- Break Timer -->
+                <div class="dashboard-card">
+                    <h3>Break Timer</h3>
+                    <input type="number" id="breakTime" placeholder="Break Time (mins)" class="dashboard-input" />
+                    <button onclick="startBreakTimer()" class="dashboard-button">Start Break</button>
+                    <div id="breakDisplay" class="timer-display">00:00</div>
+                    <button onclick="stopBreakTimer()" class="dashboard-button" style="background: #ef4444;">Stop Break</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    
+
+    <!-- JavaScript -->
+    <script src="home.js"> </script>
+</body>
+</html>
