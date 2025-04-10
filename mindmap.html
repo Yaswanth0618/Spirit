@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spirit - Smarter Plans, Stronger You</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="mindmap.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <i class="ri-leaf-fill"></i>
+                <span>Spirit</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html">Dashboard</a></li>
+                <li><a href="mindmap.html">Mind Map</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li>
+                    <button onclick="location.href='index.html'" class="signout-button">Sign Out</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <main class="mindmap-container">
+        <div class="toolbar">
+            <button id="add-node-btn">➕ Add Node</button>
+            <button id="connect-nodes-btn">🔗 Connect Nodes</button>
+            <button id="suggestion-btn">🤖 Get Suggestion</button>
+        </div>
+    
+        <div id="mindmap-area"></div>
+    </main>
+    
+    <script src="mindmap.js"></script>
+
+
+</body>
+</html>

@@ -106,7 +106,6 @@ header {
 
 .signout-button:hover {
     background-color: #1084f4;
-    color: rgb(255, 7, 209);
     transform: scale(1.1);
 }
 
