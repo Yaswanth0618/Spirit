@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpiritRadio – Emotion-Powered Beat Generator</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      color: white;
+      overflow-x: hidden;
+      transition: background 5s ease;
+      background: linear-gradient(135deg, #1f1f2e, #2e2e4d);
+      animation: bgPulse 30s infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      0% { background: linear-gradient(135deg, #2a2a4d, #1e1e3f); }
+      25% { background: linear-gradient(135deg, #3e2d6d, #1b1b36); }
+      50% { background: linear-gradient(135deg, #5141b0, #28284f); }
+      75% { background: linear-gradient(135deg, #604090, #302850); }
+      100% { background: linear-gradient(135deg, #3d3d5c, #14142e); }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 5rem auto;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      text-align: center;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    select, button {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    button {
+      background: #4cc9f0;
+      color: black;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #3a86ff;
+    }
+
+    .status {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    audio {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    #visualizer {
+      width: 100%;
+      height: 60px;
+      background: rgba(255,255,255,0.1);
+      margin-top: 1rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+    }
+
+    .bar {
+      width: 5px;
+      height: 20px;
+      background: #4cc9f0;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(2); }
+    }
+
+    .badge-area {
+      margin-top: 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #f72585;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      margin: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin: 1rem 0;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background-color: #4cc9f0;
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .progress-text {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎧 SpiritRadio</h1>
+    <p>Generate AI-powered beats tailored to your task & emotion.</p>
+
+    <div class="input-group">
+      <label>🎭 Choose your Mood</label>
+      <select id="mood">
+        <option value="happy">Happy</option>
+        <option value="sad">Sad</option>
+        <option value="focused">Focused</option>
+        <option value="tired">Tired</option>
+        <option value="energetic">Energetic</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label>🧠 Choose your Task</label>
+      <select id="task">
+        <option value="study">Study</option>
+        <option value="writing">Writing</option>
+        <option value="coding">Coding</option>
+        <option value="workout">Workout</option>
+        <option value="relax">Relax</option>
+      </select>
+    </div>
+
+    <button onclick="generateBeat()">⚡ Generate My Beat</button>
+
+    <div class="status" id="status"></div>
+    
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText">Generating your custom beat: 0%</div>
+    </div>
+    
+    <audio controls id="player" style="display:none;"></audio>
+    <div id="visualizer"></div>
+    <a id="downloadLink" download style="display:none; color: #4cc9f0; font-weight: bold; margin-top: 1rem; display: inline-block;">⬇️ Download MP3</a>
+
+    <div class="badge-area" id="badges"></div>
+  </div>
+
+  <script>
+    // Different sample tracks for different moods/tasks
+    const sampleTracks = {
+      happy: {
+        study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        writing: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        coding: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+        workout: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+        relax: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"
+      },
+      sad: {
+        study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
+        writing: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+        coding: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
+        workout: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3",
+        relax: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3"
+      },
+      focused: {
+        study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3",
+        writing: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3",
+        coding: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3",
+        workout: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3",
+        relax: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3"
+      },
+      tired: {
+        study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3",
+        writing: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-18.mp3",
+        coding: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-19.mp3",
+        workout: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-20.mp3",
+        relax: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      },
+      energetic: {
+        study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+        writing: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        coding: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+        workout: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+        relax: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"
+      }
+    };
+
+    // Mock beat generation - works entirely in the browser
+    async function generateBeat() {
+      const mood = document.getElementById('mood').value;
+      const task = document.getElementById('task').value;
+      const statusEl = document.getElementById('status');
+      const progressContainer = document.getElementById('progressContainer');
+      const progressBar = document.getElementById('progressBar');
+      const progressText = document.getElementById('progressText');
+      
+      // Disable button during generation
+      document.querySelector('button').disabled = true;
+      
+      statusEl.innerText = 'Initializing beat generation...';
+      progressContainer.style.display = 'block';
+      
+      // Simulate a 50-second generation process with progress updates
+      const totalTime = 50000; // 50 seconds in milliseconds
+      const interval = 500; // Update progress every 0.5 seconds
+      const steps = totalTime / interval;
+      
+      let currentStep = 0;
+      const generationProcess = setInterval(() => {
+        currentStep++;
+        const progress = Math.min(100, Math.round((currentStep / steps) * 100));
+        
+        progressBar.style.width = `${progress}%`;
+        progressText.innerText = `Generating your custom beat: ${progress}%`;
+        
+        // Update status messages at different stages
+        if (progress < 20) {
+          statusEl.innerText = 'Analyzing your mood and task...';
+        } else if (progress < 40) {
+          statusEl.innerText = 'Composing musical elements...';
+        } else if (progress < 60) {
+          statusEl.innerText = 'Mixing audio layers...';
+        } else if (progress < 80) {
+          statusEl.innerText = 'Finalizing your track...';
+        } else {
+          statusEl.innerText = 'Almost ready...';
+        }
+        
+        if (currentStep >= steps) {
+          clearInterval(generationProcess);
+          finishGeneration(mood, task);
+        }
+      }, interval);
+    }
+    
+    function finishGeneration(mood, task) {
+      const statusEl = document.getElementById('status');
+      const player = document.getElementById('player');
+      
+      // Get appropriate sample track based on mood and task
+      player.style.display = 'block';
+      const trackUrl = sampleTracks[mood][task] || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+      player.src = trackUrl;
+      
+      statusEl.innerText = '✅ Your track is ready!';
+      
+      // Visualizer
+      const visualizer = document.getElementById('visualizer');
+      visualizer.innerHTML = '';
+      for (let i = 0; i < 50; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'bar';
+        bar.style.animationDelay = `${Math.random()}s`;
+        bar.style.height = `${10 + Math.random() * 40}px`;
+        visualizer.appendChild(bar);
+      }
+      
+      // Download link
+      const link = document.getElementById('downloadLink');
+      link.href = player.src;
+      link.style.display = 'inline-block';
+      
+      // Badges
+      const badgeText = {
+        happy: "😊 Happy Vibes",
+        sad: "😢 Melancholy Mood",
+        focused: "🧠 Deep Focus",
+        tired: "😴 Chill Zone",
+        energetic: "⚡ Power Mode"
+      }[mood];
+      
+      document.getElementById('badges').innerHTML = 
+        `<span class="badge">${badgeText}</span>
+         <span class="badge">🏅 Beat Explorer +10 XP</span>`;
+      
+      // Re-enable the generate button
+      document.querySelector('button').disabled = false;
+    }
+  </script>
+</body>
+</html>

@@ -4,29 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spirit - Smarter Plans, Stronger You</title>
-    
+    <title>ChronoMap - Spirit Mind Mapper</title>
+
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
 
+    <!-- CSS -->
     <link rel="stylesheet" href="navbar.css">
     <link rel="stylesheet" href="mindmap.css">
+
+    <!-- LeaderLine for connections -->
+    <script src="https://cdn.jsdelivr.net/npm/leader-line@1.0.7/leader-line.min.js"></script>
 </head>
 
 <body>
+<section class="bgcolor">
     <!-- Header -->
     <header>
         <nav class="navbar">
             <div class="logo">
-                <i class="ri-leaf-fill"></i>
-                <span>Spirit</span>
+                <i class="ri-mind-map"></i>
+                <span>ChronoMap</span>
             </div>
             <ul class="nav-links">
                 <li><a href="home.html">Dashboard</a></li>
-                <li><a href="mindmap.html">Mind Map</a></li>
+                <li><a href="mindmap.html" class="active">Mind Map</a></li>
                 <li><a href="chat.html">Chat</a></li>
                 <li>
                     <button onclick="location.href='index.html'" class="signout-button">Sign Out</button>
@@ -35,19 +38,30 @@
         </nav>
     </header>
 
-
+    <!-- Main Visual Mind Map Interface -->
     <main class="mindmap-container">
         <div class="toolbar">
             <button id="add-node-btn">➕ Add Node</button>
             <button id="connect-nodes-btn">🔗 Connect Nodes</button>
-            <button id="suggestion-btn">🤖 Get Suggestion</button>
+            <button id="export-btn">📄 Export PDF</button>
         </div>
     
         <div id="mindmap-area"></div>
+        
+        <!-- Context Menu -->
+        <div id="context-menu" class="context-menu">
+            <ul>
+                <li id="delete-node">Delete Node</li>
+                <li id="change-color">Change Color</li>
+            </ul>
+        </div>
     </main>
-    
-    <script src="mindmap.js"></script>
+</section>
 
-
+<!-- Scripts -->
+<script src="mindmap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </body>
+
 </html>
