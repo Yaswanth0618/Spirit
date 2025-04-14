@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Focus Arena – Spirit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="navbar.css">
+
+  <style>
+    header {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--dark-space);
+      color: white;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .navbar {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0rem 2rem;
+    }
+
+    .signout-button {
+      background-color: #08bcfc;
+      color: white;
+      border: none;
+      padding: 0.2rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: -20px;
+      transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+      background-size: 600% 600%;
+      animation: gradientShift 10s ease infinite;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding-top: 80px; /* Adjusted for fixed header */
+    }
+
+    @keyframes gradientShift {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .container {
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(15, 12, 41, 0.7);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin: 2rem auto;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #08bcfc;
+      text-shadow: 0 0 10px rgba(8, 188, 252, 0.5);
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    input {
+      padding: 12px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      width: 80px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #08bcfc, #0062ff);
+      color: white;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(8, 188, 252, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(8, 188, 252, 0.4);
+    }
+
+    #timerDisplay {
+      font-size: 4rem;
+      margin: 1.5rem 0;
+      font-weight: bold;
+      color: #08bcfc;
+      text-shadow: 0 0 15px rgba(8, 188, 252, 0.7);
+      letter-spacing: 2px;
+    }
+
+    #status {
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
+      padding: 1rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      display: inline-block;
+    }
+
+    .video-container {
+      margin-top: 2rem;
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    video, canvas {
+      display: block;
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .nav-links li {
+      margin-left: var(--space-lg);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      #timerDisplay {
+        font-size: 3rem;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .navbar {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <i class="ri-leaf-fill"></i>
+      <span>Spirit</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="home.html">Dashboard</a></li>
+      <li><a class="active" href="FocusArena.html">Focus</a></li>
+      <li><a href="spiritradio.html">Radio</a></li>
+      <li><a href="mindmap.html">Mind Map</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><button onclick="location.href='index.html'" class="signout-button">Sign Out</button></li>
+    </ul>
+  </nav>
+</header>
+
+<body>
+  <div class="container">
+    <h1>Focus Arena <i class="ri-fire-fill" style="color: #ff6b6b;"></i></h1>
+    <p>Stay in the zone. If you leave, the session ends.</p>
+
+    <div class="input-group">
+      <label for="minutes">Focus Time (minutes):</label>
+      <input type="number" id="minutes" min="1" max="120" value="30">
+      <button onclick="startFocus()">Start Session</button>
+    </div>
+
+    <div id="timerDisplay">00:00</div>
+    <div id="status">Ready when you are</div>
+
+    <div class="video-container">
+      <video id="video" width="300" height="200" autoplay muted playsinline></video>
+      <canvas id="canvas" width="300" height="200"></canvas>
+    </div>
+  </div>
+
+  <script src="focusArena.js"></script>
+</body>
+</html>

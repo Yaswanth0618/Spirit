@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Spirit Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem;
+    }
+
+    h1 {
+      color: #4cc9f0;
+      margin-bottom: 1rem;
+    }
+
+    form {
+      width: 90%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 15px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 20px rgba(72, 149, 239, 0.3);
+    }
+
+    input, textarea, button {
+      padding: 12px;
+      font-family: inherit;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      resize: vertical;
+    }
+
+    input, textarea {
+      background: #1a1a2e;
+      color: white;
+    }
+
+    button {
+      background: linear-gradient(135deg, #4cc9f0, #3f37c9);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #4895ef, #4895ef);
+    }
+
+    .success {
+      color: #00ffcc;
+      margin-top: 1rem;
+    }
+
+    .error {
+      color: #ff6961;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Contact Spirit Team</h1>
+  <form id="contactForm">
+    <input type="text" id="name" name="name" placeholder="Your Name" required />
+    <input type="email" id="email" name="email" placeholder="Your Email" required />
+    <input type="text" id="subject" name="subject" placeholder="Subject" required />
+    <textarea id="message" name="message" rows="6" placeholder="Your Message..." required></textarea>
+    <button type="submit">Send Message</button>
+    <div class="success" id="successMsg"></div>
+    <div class="error" id="errorMsg"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const successMsg = document.getElementById("successMsg");
+    const errorMsg = document.getElementById("errorMsg");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      successMsg.textContent = "";
+      errorMsg.textContent = "";
+
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value
+      };
+
+      try {
+        const res = await fetch("http://localhost:5001/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+          successMsg.textContent = "✅ Message sent successfully!";
+          form.reset();
+        } else {
+          throw new Error("Server error");
+        }
+      } catch (err) {
+        errorMsg.textContent = "❌ Failed to send message. Please try again.";
+      }
+    });
+  </script>
+
+</body>
+</html>

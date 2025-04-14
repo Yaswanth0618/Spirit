@@ -56,7 +56,6 @@ body {
 
 .signout-button:hover {
     background-color: #1084f4;
-    color: rgb(255, 7, 209);
     transform: scale(1.1);
 }
 
@@ -119,6 +118,12 @@ header {
         display: none;
     }
 
+
+    
+}
+
+li a.active {
+    color: var(--accent);
 }
 
 

@@ -4,191 +4,426 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SpiritRadio – Emotion-Powered Beat Generator</title>
-
   <!-- Fonts & Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <!-- Three.js for 3D effects -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+  <link rel="stylesheet" href="navbar.css" />
 
   <style>
-    body {
+    :root {
+      --neon-pink: #f72585;
+      --neon-blue: #4cc9f0;
+      --neon-purple: #7209b7;
+      --dark-space: #0d0d1a;
+      --cyber-teal: #06d6a0;
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
       font-family: 'Montserrat', sans-serif;
+      background-color: var(--dark-space);
       color: white;
       overflow-x: hidden;
-      transition: background 5s ease;
-      background: linear-gradient(135deg, #1f1f2e, #2e2e4d);
-      animation: bgPulse 30s infinite alternate;
+      perspective: 1000px;
     }
 
-    @keyframes bgPulse {
-      0% { background: linear-gradient(135deg, #2a2a4d, #1e1e3f); }
-      25% { background: linear-gradient(135deg, #3e2d6d, #1b1b36); }
-      50% { background: linear-gradient(135deg, #5141b0, #28284f); }
-      75% { background: linear-gradient(135deg, #604090, #302850); }
-      100% { background: linear-gradient(135deg, #3d3d5c, #14142e); }
-    }
-
-    .container {
+    /* 3D Floating Container */
+    .container-3d {
       max-width: 800px;
       margin: 5rem auto;
-      padding: 2rem;
-      background: rgba(0, 0, 0, 0.6);
+      padding: 3rem;
+      background: rgba(13, 13, 26, 0.8);
       border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-      text-align: center;
-      animation: fadeIn 2s ease;
+      box-shadow: 0 0 50px rgba(114, 9, 183, 0.3);
+      border: 1px solid rgba(76, 201, 240, 0.1);
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .container-3d::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(114,9,183,0.1) 0%, rgba(13,13,26,0) 70%);
+      animation: rotate 60s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .input-group {
+      font-size: 3rem;
       margin-bottom: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background: linear-gradient(90deg, var(--neon-pink), var(--neon-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(247, 37, 133, 0.3);
+      letter-spacing: 2px;
+      text-align: center;
     }
 
-    select, button {
-      padding: 0.7rem 1.5rem;
+    p.subtitle {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 5px rgba(76, 201, 240, 0.5);
+    }
+
+    /* Cyberpunk Inputs */
+    .input-group {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      color: var(--neon-blue);
+      text-shadow: 0 0 5px rgba(76, 201, 240, 0.3);
+    }
+
+    .input-group select {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(13, 13, 26, 0.7);
+      border: 1px solid var(--neon-purple);
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      appearance: none;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(114, 9, 183, 0.2);
+    }
+
+    .input-group select:focus {
+      border-color: var(--neon-blue);
+      box-shadow: 0 0 20px rgba(76, 201, 240, 0.4);
+    }
+
+    /* Holographic Button */
+    .generate-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+      color: white;
       border: none;
       border-radius: 10px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-
-    button {
-      background: #4cc9f0;
-      color: black;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background: #3a86ff;
-    }
-
-    .status {
-      margin-top: 2rem;
       font-size: 1.2rem;
-      font-weight: 600;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(247, 37, 133, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Orbitron', sans-serif;
+      margin-top: 1rem;
     }
 
-    audio {
-      margin-top: 1rem;
+    .generate-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(247, 37, 133, 0.6);
+    }
+
+    .generate-btn:active {
+      transform: translateY(1px);
+    }
+
+    .generate-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255,255,255,0) 45%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0) 55%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      100% { transform: translateX(100%) rotate(30deg); }
+    }
+
+    /* 3D Audio Visualizer */
+    #visualizer-container {
       width: 100%;
+      height: 200px;
+      margin: 2rem 0;
+      position: relative;
+      transform-style: preserve-3d;
+      perspective: 500px;
     }
 
     #visualizer {
       width: 100%;
-      height: 60px;
-      background: rgba(255,255,255,0.1);
-      margin-top: 1rem;
+      height: 100%;
+      background: rgba(13, 13, 26, 0.5);
+      border: 1px solid var(--neon-purple);
+      border-radius: 10px;
       display: flex;
       align-items: flex-end;
       justify-content: space-around;
+      transform: rotateX(15deg);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.3);
     }
 
     .bar {
-      width: 5px;
-      height: 20px;
-      background: #4cc9f0;
-      animation: pulse 1s infinite;
+      width: 8px;
+      background: linear-gradient(to top, var(--neon-pink), var(--neon-blue));
+      border-radius: 5px 5px 0 0;
+      transform-origin: bottom;
+      animation: pulse 1s infinite alternate;
+      box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scaleY(1); }
-      50% { transform: scaleY(2); }
+      0% { transform: scaleY(0.3); opacity: 0.7; }
+      100% { transform: scaleY(1); opacity: 1; }
     }
 
+    /* Floating Particles Background */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    /* Status Text */
+    .status {
+      margin-top: 1.5rem;
+      font-size: 1.2rem;
+      text-align: center;
+      color: var(--cyber-teal);
+      text-shadow: 0 0 5px rgba(6, 214, 160, 0.5);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Audio Player */
+    audio {
+      width: 100%;
+      margin-top: 1.5rem;
+      filter: drop-shadow(0 0 10px rgba(76, 201, 240, 0.5));
+    }
+
+    audio::-webkit-media-controls-panel {
+      background: linear-gradient(to right, #1a1a2e, #16213e);
+      border-radius: 10px;
+    }
+
+    /* Download Link */
+    #downloadLink {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--neon-blue);
+      font-size: 1.1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    #downloadLink:hover {
+      color: var(--neon-pink);
+      text-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
+    }
+
+    /* Badges */
     .badge-area {
-      margin-top: 1rem;
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .badge {
-      display: inline-block;
-      background: #f72585;
-      padding: 0.4rem 0.8rem;
-      border-radius: 999px;
-      margin: 0.5rem;
-      font-size: 0.85rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, var(--neon-purple), rgba(114,9,183,0.5));
+      box-shadow: 0 0 10px rgba(114,9,183,0.3);
+      border: 1px solid var(--neon-blue);
     }
 
+    /* Progress Bar */
     .progress-container {
       width: 100%;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      height: 10px;
+      background: rgba(13, 13, 26, 0.5);
+      border-radius: 5px;
       margin: 1rem 0;
+      overflow: hidden;
       display: none;
     }
 
     .progress-bar {
-      height: 10px;
-      background-color: #4cc9f0;
-      border-radius: 10px;
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
       width: 0%;
-      transition: width 0.3s;
+      transition: width 0.3s ease;
+      border-radius: 5px;
     }
 
-    .progress-text {
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container-3d {
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎧 SpiritRadio</h1>
-    <p>Generate AI-powered beats tailored to your task & emotion.</p>
+  <!-- Floating Particles Background -->
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <i class="ri-leaf-fill"></i>
+      <span>Spirit</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="home.html">Dashboard</a></li>
+      <li><a href="FocusArena.html">Focus</a></li>
+      <li><a class="active" href="spiritradio.html">Radio</a></li>
+      <li><a href="mindmap.html">Mind Map</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li>
+        <button onclick="location.href='index.html'" class="signout-button">Sign Out</button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+  <div id="particles-js"></div>
+
+  <!-- Main Container with 3D Effect -->
+  <div class="container-3d" id="mainContainer">
+    <h1>SPIRIT<span style="color: var(--neon-blue)">RADIO</span></h1>
+    <p class="subtitle">AI-POWERED BEATS FOR YOUR SOUL</p>
 
     <div class="input-group">
-      <label>🎭 Choose your Mood</label>
+      <label><i class="ri-emotion-line"></i> CHOOSE YOUR MOOD</label>
       <select id="mood">
-        <option value="happy">Happy</option>
-        <option value="sad">Sad</option>
-        <option value="focused">Focused</option>
-        <option value="tired">Tired</option>
-        <option value="energetic">Energetic</option>
+        <option value="happy">😊 HAPPY</option>
+        <option value="sad">😢 MELANCHOLY</option>
+        <option value="focused">🧠 DEEP FOCUS</option>
+        <option value="tired">😴 CHILL ZONE</option>
+        <option value="energetic">⚡ POWER MODE</option>
       </select>
     </div>
 
     <div class="input-group">
-      <label>🧠 Choose your Task</label>
+      <label><i class="ri-task-line"></i> SELECT ACTIVITY</label>
       <select id="task">
-        <option value="study">Study</option>
-        <option value="writing">Writing</option>
-        <option value="coding">Coding</option>
-        <option value="workout">Workout</option>
-        <option value="relax">Relax</option>
+        <option value="study">📚 STUDY SESSION</option>
+        <option value="writing">✍️ CREATIVE FLOW</option>
+        <option value="coding">💻 CODE MARATHON</option>
+        <option value="workout">🏋️ POWER WORKOUT</option>
+        <option value="relax">🧘 DEEP RELAXATION</option>
       </select>
     </div>
 
-    <button onclick="generateBeat()">⚡ Generate My Beat</button>
+    <button class="generate-btn" id="generateBtn">
+      <i class="ri-play-fill"></i> GENERATE NEURAL BEAT
+    </button>
 
-    <div class="status" id="status"></div>
-    
     <div class="progress-container" id="progressContainer">
       <div class="progress-bar" id="progressBar"></div>
-      <div class="progress-text" id="progressText">Generating your custom beat: 0%</div>
     </div>
+
+    <div class="status" id="status">READY TO SYNTHESIZE</div>
     
+    <!-- 3D Visualizer -->
+    <div id="visualizer-container">
+      <div id="visualizer"></div>
+    </div>
+
     <audio controls id="player" style="display:none;"></audio>
-    <div id="visualizer"></div>
-    <a id="downloadLink" download style="display:none; color: #4cc9f0; font-weight: bold; margin-top: 1rem; display: inline-block;">⬇️ Download MP3</a>
+    <a id="downloadLink" download style="display:none;">
+      <i class="ri-download-line"></i> DOWNLOAD NEURAL PATTERN
+    </a>
 
     <div class="badge-area" id="badges"></div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
-    // Different sample tracks for different moods/tasks
+    // Initialize particle.js background
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#4cc9f0" },
+        "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+        "opacity": { "value": 0.5, "random": true },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": true, "distance": 150, "color": "#7209b7", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 3, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "repulse" },
+          "onclick": { "enable": true, "mode": "push" }
+        }
+      }
+    });
+
+    // 3D tilt effect on main container - MODIFIED TO BE LESS EXTREME
+    const container = document.getElementById('mainContainer');
+    container.addEventListener('mousemove', (e) => {
+      const xAxis = (window.innerWidth / 2 - e.pageX) / 50; // Reduced from 25 to 50
+      const yAxis = (window.innerHeight / 2 - e.pageY) / 50; // Reduced from 25 to 50
+      container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      container.style.boxShadow = `${-xAxis}px ${yAxis}px 50px rgba(114,9,183,0.3)`;
+    });
+
+    // Reset position when mouse leaves
+    container.addEventListener('mouseleave', () => {
+      container.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      container.style.boxShadow = '0 0 50px rgba(114, 9, 183, 0.3)';
+      container.style.transition = 'transform 0.5s ease, box-shadow 0.5s ease'; // Added smooth transition back
+    });
+
+    // Sample tracks
     const sampleTracks = {
       happy: {
         study: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
@@ -227,97 +462,83 @@
       }
     };
 
-    // Mock beat generation - works entirely in the browser
-    async function generateBeat() {
+    // Generate beat function - IMPROVED
+    document.getElementById('generateBtn').addEventListener('click', function() {
       const mood = document.getElementById('mood').value;
       const task = document.getElementById('task').value;
       const statusEl = document.getElementById('status');
+      const player = document.getElementById('player');
+      const btn = this;
       const progressContainer = document.getElementById('progressContainer');
       const progressBar = document.getElementById('progressBar');
-      const progressText = document.getElementById('progressText');
       
       // Disable button during generation
-      document.querySelector('button').disabled = true;
-      
-      statusEl.innerText = 'Initializing beat generation...';
+      btn.disabled = true;
+      statusEl.innerText = 'INITIALIZING NEURAL SYNTHESIS...';
       progressContainer.style.display = 'block';
+      progressBar.style.width = '0%';
       
-      // Simulate a 50-second generation process with progress updates
+      // Show progress percentage
+      let progress = 0;
       const totalTime = 50000; // 50 seconds in milliseconds
-      const interval = 500; // Update progress every 0.5 seconds
-      const steps = totalTime / interval;
+      const interval = 100; // update every 100ms for smooth progress
+      const increment = (interval / totalTime) * 200;
       
-      let currentStep = 0;
-      const generationProcess = setInterval(() => {
-        currentStep++;
-        const progress = Math.min(100, Math.round((currentStep / steps) * 100));
+      const progressInterval = setInterval(() => {
+        progress += increment;
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+        statusEl.innerText = `GENERATING: ${Math.min(Math.floor(progress), 100)}%`;
         
-        progressBar.style.width = `${progress}%`;
-        progressText.innerText = `Generating your custom beat: ${progress}%`;
-        
-        // Update status messages at different stages
-        if (progress < 20) {
-          statusEl.innerText = 'Analyzing your mood and task...';
-        } else if (progress < 40) {
-          statusEl.innerText = 'Composing musical elements...';
-        } else if (progress < 60) {
-          statusEl.innerText = 'Mixing audio layers...';
-        } else if (progress < 80) {
-          statusEl.innerText = 'Finalizing your track...';
-        } else {
-          statusEl.innerText = 'Almost ready...';
-        }
-        
-        if (currentStep >= steps) {
-          clearInterval(generationProcess);
-          finishGeneration(mood, task);
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          finishGeneration();
         }
       }, interval);
-    }
-    
-    function finishGeneration(mood, task) {
-      const statusEl = document.getElementById('status');
-      const player = document.getElementById('player');
-      
-      // Get appropriate sample track based on mood and task
-      player.style.display = 'block';
-      const trackUrl = sampleTracks[mood][task] || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-      player.src = trackUrl;
-      
-      statusEl.innerText = '✅ Your track is ready!';
-      
-      // Visualizer
-      const visualizer = document.getElementById('visualizer');
-      visualizer.innerHTML = '';
-      for (let i = 0; i < 50; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.animationDelay = `${Math.random()}s`;
-        bar.style.height = `${10 + Math.random() * 40}px`;
-        visualizer.appendChild(bar);
+
+      function finishGeneration() {
+        // Get appropriate sample track
+        player.style.display = 'block';
+        const trackUrl = sampleTracks[mood][task] || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+        player.src = trackUrl;
+        
+        // Create visualizer bars
+        const visualizer = document.getElementById('visualizer');
+        visualizer.innerHTML = '';
+        for (let i = 0; i < 50; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'bar';
+          bar.style.animationDelay = `${Math.random()}s`;
+          bar.style.height = `${10 + Math.random() * 90}px`;
+          visualizer.appendChild(bar);
+        }
+        
+        // Enable download
+        const link = document.getElementById('downloadLink');
+        link.href = player.src;
+        link.style.display = 'block';
+        
+        // Update status
+        statusEl.innerText = 'NEURAL PATTERN READY';
+        btn.disabled = false;
+        progressContainer.style.display = 'none';
+        
+        // Add badges
+        const badgeText = {
+          happy: "😊 NEON BLISS MODE",
+          sad: "😢 MELANCHOLIC WAVES",
+          focused: "🧠 HYPERFOCUS ENGAGED",
+          tired: "😴 CHILL FREQUENCIES",
+          energetic: "⚡ POWER SURGE"
+        }[mood];
+        
+        document.getElementById('badges').innerHTML = 
+          `<div class="badge">${badgeText}</div>
+           <div class="badge">🎧 AUDIO MATRIX SYNCHRONIZED</div>`;
       }
-      
-      // Download link
-      const link = document.getElementById('downloadLink');
-      link.href = player.src;
-      link.style.display = 'inline-block';
-      
-      // Badges
-      const badgeText = {
-        happy: "😊 Happy Vibes",
-        sad: "😢 Melancholy Mood",
-        focused: "🧠 Deep Focus",
-        tired: "😴 Chill Zone",
-        energetic: "⚡ Power Mode"
-      }[mood];
-      
-      document.getElementById('badges').innerHTML = 
-        `<span class="badge">${badgeText}</span>
-         <span class="badge">🏅 Beat Explorer +10 XP</span>`;
-      
-      // Re-enable the generate button
-      document.querySelector('button').disabled = false;
-    }
+    });
   </script>
+
+  <!--Accesibility widget-->
+  <script src="https://cdn.userway.org/widget.js" data-account="ertbJPpxpJ"></script>
 </body>
 </html>

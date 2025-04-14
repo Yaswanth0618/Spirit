@@ -9,27 +9,198 @@
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="navbar.css" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="navbar.css">
-    <link rel="stylesheet" href="mindmap.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0f172a;
+            color: white;
+        }
+           
+
+        .mindmap-container {
+            padding: 2rem;
+            position: relative;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        .toolbar {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .toolbar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .toolbar button:active {
+            transform: translateY(0);
+        }
+
+        #mindmap-area {
+            width: 100%;
+            height: calc(100% - 40px);
+            position: relative;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid #334155;
+        }
+
+        .node {
+            position: absolute;
+            min-width: 120px;
+            min-height: 60px;
+            background: #3b82f6;
+            color: white;
+            font-weight: 600;
+            border: 2px solid #60a5fa;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: move;
+            text-align: center;
+            user-select: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+
+        .node:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+        }
+
+        .node.selected {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.5);
+            transform: scale(1.02);
+        }
+
+        .node:hover {
+            transform: scale(1.02);
+        }
+
+        .context-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            min-width: 180px;
+            overflow: hidden;
+        }
+
+        .context-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .context-menu li {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .context-menu li:hover {
+            background-color: #f8fafc;
+            color: #3b82f6;
+        }
+
+        .connection-label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            color: #334155;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .color-picker {
+            display: none;
+            position: absolute;
+            background: white;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 0.25rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #334155;
+        }
+    </style>
 
     <!-- LeaderLine for connections -->
     <script src="https://cdn.jsdelivr.net/npm/leader-line@1.0.7/leader-line.min.js"></script>
 </head>
 
 <body>
-<section class="bgcolor">
     <!-- Header -->
     <header>
         <nav class="navbar">
             <div class="logo">
-                <i class="ri-mind-map"></i>
-                <span>ChronoMap</span>
+                <i class="ri-leaf-fill"></i>
+                <span>Spirit</span>
             </div>
             <ul class="nav-links">
                 <li><a href="home.html">Dashboard</a></li>
-                <li><a href="mindmap.html" class="active">Mind Map</a></li>
+                <li><a href="FocusArena.html">Focus</a></li>
+                <li><a href="spiritradio.html">Radio</a></li>
+                <li><a class="active" href="mindmap.html" class="active">Mind Map</a></li>
                 <li><a href="chat.html">Chat</a></li>
                 <li>
                     <button onclick="location.href='index.html'" class="signout-button">Sign Out</button>
@@ -41,9 +212,21 @@
     <!-- Main Visual Mind Map Interface -->
     <main class="mindmap-container">
         <div class="toolbar">
-            <button id="add-node-btn">➕ Add Node</button>
-            <button id="connect-nodes-btn">🔗 Connect Nodes</button>
-            <button id="export-btn">📄 Export PDF</button>
+            <button id="add-node-btn">
+                <i class="ri-add-circle-line"></i> Add Node
+            </button>
+            <button id="connect-nodes-btn">
+                <i class="ri-node-tree"></i> Connect Nodes
+            </button>
+            <button id="delete-selected-btn">
+                <i class="ri-delete-bin-line"></i> Delete Selected
+            </button>
+            <button id="export-btn">
+                <i class="ri-download-line"></i> Export PDF
+            </button>
+            <button id="clear-all-btn">
+                <i class="ri-delete-bin-2-line"></i> Clear All
+            </button>
         </div>
     
         <div id="mindmap-area"></div>
@@ -51,17 +234,651 @@
         <!-- Context Menu -->
         <div id="context-menu" class="context-menu">
             <ul>
-                <li id="delete-node">Delete Node</li>
-                <li id="change-color">Change Color</li>
+                <li id="delete-node"><i class="ri-delete-bin-line"></i> Delete Node</li>
+                <li id="change-color"><i class="ri-palette-line"></i> Change Color</li>
+                <li id="duplicate-node"><i class="ri-file-copy-line"></i> Duplicate</li>
             </ul>
         </div>
+
+        <!-- Color Picker -->
+        <div id="color-picker" class="color-picker">
+            <div class="color-option" data-color="#3b82f6" style="background-color: #3b82f6;"></div>
+            <div class="color-option" data-color="#10b981" style="background-color: #10b981;"></div>
+            <div class="color-option" data-color="#f59e0b" style="background-color: #f59e0b;"></div>
+            <div class="color-option" data-color="#ef4444" style="background-color: #ef4444;"></div>
+            <div class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"></div>
+            <div class="color-option" data-color="#ec4899" style="background-color: #ec4899;"></div>
+        </div>
     </main>
-</section>
 
-<!-- Scripts -->
-<script src="mindmap.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <script>
+        // Initialize the mindmap
+        const mindmapArea = document.getElementById('mindmap-area');
+        const addNodeBtn = document.getElementById('add-node-btn');
+        const connectNodesBtn = document.getElementById('connect-nodes-btn');
+        const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+        const exportBtn = document.getElementById('export-btn');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const contextMenu = document.getElementById('context-menu');
+        const deleteNodeBtn = document.getElementById('delete-node');
+        const changeColorBtn = document.getElementById('change-color');
+        const duplicateNodeBtn = document.getElementById('duplicate-node');
+        const colorPicker = document.getElementById('color-picker');
+
+        let selectedNodes = [];
+        let lines = [];
+        let rightClickedNode = null;
+        let nodeCounter = 0;
+        let isConnecting = false;
+        let connectionLabel = null;
+
+        // Load saved mindmap from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMindmap();
+            
+            // Set up keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Delete key - delete selected nodes
+                if (e.key === 'Delete' && selectedNodes.length > 0) {
+                    deleteSelectedNodes();
+                }
+                
+                // Escape key - cancel connection mode or deselect nodes
+                if (e.key === 'Escape') {
+                    if (isConnecting) {
+                        cancelConnectionMode();
+                    } else if (selectedNodes.length > 0) {
+                        deselectAllNodes();
+                    }
+                }
+                
+                // Ctrl+D - duplicate selected nodes
+                if (e.ctrlKey && e.key === 'd' && selectedNodes.length > 0) {
+                    duplicateSelectedNodes();
+                }
+            });
+        });
+
+        addNodeBtn.addEventListener('click', () => {
+            createNode();
+        });
+
+        connectNodesBtn.addEventListener('click', () => {
+            if (isConnecting) {
+                cancelConnectionMode();
+            } else {
+                startConnectionMode();
+            }
+        });
+
+        deleteSelectedBtn.addEventListener('click', deleteSelectedNodes);
+
+        exportBtn.addEventListener('click', exportToPDF);
+
+        clearAllBtn.addEventListener('click', clearAll);
+
+        // Handle right-click context menu
+        mindmapArea.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            const target = e.target.closest('.node');
+            if (target) {
+                rightClickedNode = target;
+                showContextMenu(e.clientX, e.clientY);
+            } else {
+                hideContextMenu();
+            }
+        });
+
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!contextMenu.contains(e.target) && !colorPicker.contains(e.target)) {
+                hideContextMenu();
+                hideColorPicker();
+            }
+        });
+
+        deleteNodeBtn.addEventListener('click', () => {
+            if (rightClickedNode) {
+                deleteNode(rightClickedNode);
+                rightClickedNode = null;
+                hideContextMenu();
+            }
+        });
+
+        changeColorBtn.addEventListener('click', (e) => {
+            if (rightClickedNode) {
+                showColorPicker(e.clientX, e.clientY);
+            }
+        });
+
+        duplicateNodeBtn.addEventListener('click', () => {
+            if (rightClickedNode) {
+                duplicateNode(rightClickedNode);
+                hideContextMenu();
+            }
+        });
+
+        // Color picker event
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', () => {
+                if (rightClickedNode) {
+                    rightClickedNode.style.backgroundColor = option.dataset.color;
+                    saveMindmap();
+                    hideColorPicker();
+                    hideContextMenu();
+                }
+            });
+        });
+
+        function showContextMenu(x, y) {
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${x}px`;
+            contextMenu.style.top = `${y}px`;
+        }
+
+        function hideContextMenu() {
+            contextMenu.style.display = 'none';
+        }
+
+        function showColorPicker(x, y) {
+            colorPicker.style.display = 'grid';
+            colorPicker.style.gridTemplateColumns = 'repeat(3, 1fr)';
+            colorPicker.style.left = `${x}px`;
+            colorPicker.style.top = `${y}px`;
+        }
+
+        function hideColorPicker() {
+            colorPicker.style.display = 'none';
+        }
+
+        function createNode(x, y, text = '', id = null, color = '#3b82f6') {
+            const node = document.createElement('div');
+            node.className = 'node';
+            node.contentEditable = true;
+            node.dataset.id = id || `node-${nodeCounter++}`;
+            
+            // Set position if provided, otherwise center
+            const centerX = mindmapArea.offsetWidth / 2 - 60;
+            const centerY = mindmapArea.offsetHeight / 2 - 30;
+            
+            node.style.left = x ? `${x}px` : `${centerX}px`;
+            node.style.top = y ? `${y}px` : `${centerY}px`;
+            node.style.backgroundColor = color;
+            
+            node.textContent = text || 'New Node';
+            mindmapArea.appendChild(node);
+
+            makeDraggable(node);
+
+            node.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                if (isConnecting) {
+                    handleNodeConnection(node);
+                } else {
+                    toggleNodeSelection(node, e.ctrlKey || e.metaKey);
+                }
+            });
+
+            node.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                node.focus();
+            });
+
+            node.addEventListener('blur', () => {
+                saveMindmap();
+            });
+
+            return node;
+        }
+
+        function toggleNodeSelection(node, multiSelect = false) {
+            if (!multiSelect) {
+                // Deselect all if not holding Ctrl/Cmd
+                selectedNodes.forEach(n => n.classList.remove('selected'));
+                selectedNodes = [];
+            }
+            
+            if (selectedNodes.includes(node)) {
+                // Deselect if already selected
+                node.classList.remove('selected');
+                selectedNodes = selectedNodes.filter(n => n !== node);
+            } else {
+                // Select the node
+                selectedNodes.push(node);
+                node.classList.add('selected');
+            }
+            
+            updateToolbarButtons();
+        }
+
+        function deselectAllNodes() {
+            selectedNodes.forEach(node => node.classList.remove('selected'));
+            selectedNodes = [];
+            updateToolbarButtons();
+        }
+
+        function updateToolbarButtons() {
+            connectNodesBtn.innerHTML = isConnecting ? 
+                '<i class="ri-close-line"></i> Cancel Connection' : 
+                '<i class="ri-node-tree"></i> Connect Nodes';
+                
+            connectNodesBtn.style.background = isConnecting ? 
+                'linear-gradient(135deg, #ef4444, #f97316)' : 
+                'linear-gradient(135deg, #3b82f6, #6366f1)';
+                
+            deleteSelectedBtn.disabled = selectedNodes.length === 0;
+        }
+
+        function startConnectionMode() {
+            if (selectedNodes.length === 2) {
+                // If exactly 2 nodes are selected, connect them directly
+                createConnection(selectedNodes[0], selectedNodes[1]);
+                deselectAllNodes();
+            } else {
+                // Enter connection mode
+                isConnecting = true;
+                deselectAllNodes();
+                mindmapArea.style.cursor = 'crosshair';
+                
+                // Create connection label
+                connectionLabel = document.createElement('div');
+                connectionLabel.className = 'connection-label';
+                connectionLabel.textContent = 'Select first node';
+                connectionLabel.style.display = 'none';
+                mindmapArea.appendChild(connectionLabel);
+                
+                updateToolbarButtons();
+            }
+        }
+
+        function cancelConnectionMode() {
+            isConnecting = false;
+            mindmapArea.style.cursor = '';
+            
+            if (connectionLabel) {
+                connectionLabel.remove();
+                connectionLabel = null;
+            }
+            
+            updateToolbarButtons();
+        }
+
+        function handleNodeConnection(node) {
+            if (selectedNodes.length === 0) {
+                // First node selected
+                selectedNodes.push(node);
+                node.classList.add('selected');
+                connectionLabel.textContent = 'Select second node';
+                
+                // Position label near the node
+                const rect = node.getBoundingClientRect();
+                const areaRect = mindmapArea.getBoundingClientRect();
+                connectionLabel.style.left = `${rect.right - areaRect.left + 10}px`;
+                connectionLabel.style.top = `${rect.top - areaRect.top}px`;
+                connectionLabel.style.display = 'block';
+            } else if (selectedNodes.length === 1 && selectedNodes[0] !== node) {
+                // Second node selected
+                selectedNodes.push(node);
+                node.classList.add('selected');
+                createConnection(selectedNodes[0], selectedNodes[1]);
+                cancelConnectionMode();
+            }
+        }
+
+        function createConnection(node1, node2, label = '') {
+            // Check if connection already exists
+            const existingConnection = lines.find(line => 
+                (line.start.element === node1 && line.end.element === node2) ||
+                (line.start.element === node2 && line.end.element === node1)
+            );
+            
+            if (existingConnection) {
+                alert('These nodes are already connected.');
+                return;
+            }
+
+            const line = new LeaderLine(
+                node1,
+                node2,
+                {
+                    color: '#94a3b8',
+                    path: 'fluid',
+                    size: 2,
+                    startSocket: 'right',
+                    endSocket: 'left',
+                    startPlug: 'behind',
+                    endPlug: 'arrow1',
+                    dash: { animation: false },
+                    dropShadow: { color: '#000000', dx: 0, dy: 0, blur: 4, opacity: 0.3 }
+                }
+            );
+            
+            lines.push(line);
+            saveMindmap();
+            
+            // Add connection label if provided
+            if (label) {
+                const labelElement = document.createElement('div');
+                labelElement.className = 'connection-label';
+                labelElement.textContent = label;
+                
+                // Position label in the middle of the connection
+                const x1 = node1.offsetLeft + node1.offsetWidth / 2;
+                const y1 = node1.offsetTop + node1.offsetHeight / 2;
+                const x2 = node2.offsetLeft + node2.offsetWidth / 2;
+                const y2 = node2.offsetTop + node2.offsetHeight / 2;
+                
+                labelElement.style.left = `${(x1 + x2) / 2 - 30}px`;
+                labelElement.style.top = `${(y1 + y2) / 2 - 10}px`;
+                
+                mindmapArea.appendChild(labelElement);
+                
+                // Store reference to label with the line
+                line.labelElement = labelElement;
+            }
+            
+            return line;
+        }
+
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
+
+            element.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return; // Only left click for dragging
+                
+                // Don't start dragging if clicking on a text selection
+                const selection = window.getSelection();
+                if (selection.toString().length > 0) return;
+                
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+                element.style.cursor = 'grabbing';
+                
+                // Bring to front
+                element.style.zIndex = '100';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const x = e.clientX - offsetX - mindmapArea.getBoundingClientRect().left;
+                    const y = e.clientY - offsetY - mindmapArea.getBoundingClientRect().top;
+                    
+                    // Boundary checks
+                    const maxX = mindmapArea.offsetWidth - element.offsetWidth;
+                    const maxY = mindmapArea.offsetHeight - element.offsetHeight;
+                    
+                    element.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+                    element.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+                    
+                    // Update all lines connected to this node
+                    updateConnections(element);
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    element.style.cursor = 'grab';
+                    element.style.zIndex = '';
+                    saveMindmap();
+                }
+            });
+        }
+
+        function updateConnections(node) {
+            lines.forEach(line => {
+                if (line.start.element === node || line.end.element === node) {
+                    line.position();
+                    
+                    // Update label position if exists
+                    if (line.labelElement) {
+                        const node1 = line.start.element;
+                        const node2 = line.end.element;
+                        
+                        const x1 = node1.offsetLeft + node1.offsetWidth / 2;
+                        const y1 = node1.offsetTop + node1.offsetHeight / 2;
+                        const x2 = node2.offsetLeft + node2.offsetWidth / 2;
+                        const y2 = node2.offsetTop + node2.offsetHeight / 2;
+                        
+                        line.labelElement.style.left = `${(x1 + x2) / 2 - 30}px`;
+                        line.labelElement.style.top = `${(y1 + y2) / 2 - 10}px`;
+                    }
+                }
+            });
+        }
+
+        function deleteNode(node) {
+            // Remove all connections to this node
+            lines = lines.filter(line => {
+                if (line.start.element === node || line.end.element === node) {
+                    if (line.labelElement) {
+                        line.labelElement.remove();
+                    }
+                    line.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            // Remove node from selectedNodes if it's there
+            selectedNodes = selectedNodes.filter(n => n !== node);
+            
+            // Remove the node from DOM
+            node.remove();
+            saveMindmap();
+        }
+
+        function deleteSelectedNodes() {
+            if (selectedNodes.length === 0) return;
+            
+            // Create a copy of the array to avoid modification during iteration
+            const nodesToDelete = [...selectedNodes];
+            
+            nodesToDelete.forEach(node => {
+                deleteNode(node);
+            });
+            
+            selectedNodes = [];
+            updateToolbarButtons();
+        }
+
+        function duplicateNode(node) {
+            const rect = node.getBoundingClientRect();
+            const areaRect = mindmapArea.getBoundingClientRect();
+            
+            const newX = rect.left - areaRect.left + 20;
+            const newY = rect.top - areaRect.top + 20;
+            
+            const newNode = createNode(
+                newX,
+                newY,
+                node.textContent + ' (copy)',
+                null,
+                node.style.backgroundColor
+            );
+            
+            // Select the new node and deselect others
+            deselectAllNodes();
+            selectedNodes.push(newNode);
+            newNode.classList.add('selected');
+            
+            saveMindmap();
+        }
+
+        function duplicateSelectedNodes() {
+            if (selectedNodes.length === 0) return;
+            
+            const newNodes = [];
+            
+            selectedNodes.forEach(node => {
+                const rect = node.getBoundingClientRect();
+                const areaRect = mindmapArea.getBoundingClientRect();
+                
+                const newX = rect.left - areaRect.left + 20;
+                const newY = rect.top - areaRect.top + 20;
+                
+                const newNode = createNode(
+                    newX,
+                    newY,
+                    node.textContent + ' (copy)',
+                    null,
+                    node.style.backgroundColor
+                );
+                
+                newNodes.push(newNode);
+            });
+            
+            // Select the new nodes and deselect others
+            deselectAllNodes();
+            selectedNodes = newNodes;
+            selectedNodes.forEach(node => node.classList.add('selected'));
+            
+            saveMindmap();
+        }
+
+        function saveMindmap() {
+            const nodes = Array.from(document.querySelectorAll('.node')).map(node => ({
+                id: node.dataset.id,
+                x: node.offsetLeft,
+                y: node.offsetTop,
+                text: node.textContent,
+                color: node.style.backgroundColor
+            }));
+
+            const connections = lines.map(line => ({
+                sourceId: line.start.element.dataset.id,
+                targetId: line.end.element.dataset.id,
+                label: line.labelElement ? line.labelElement.textContent : ''
+            }));
+
+            const mindmapData = {
+                nodes,
+                connections,
+                nodeCounter
+            };
+
+            localStorage.setItem('mindmapData', JSON.stringify(mindmapData));
+        }
+
+        function loadMindmap() {
+            const savedData = localStorage.getItem('mindmapData');
+            if (!savedData) {
+                // Create a default central node if no saved data
+                createNode();
+                return;
+            }
+
+            const mindmapData = JSON.parse(savedData);
+            nodeCounter = mindmapData.nodeCounter || 0;
+
+            // Create nodes first
+            const nodesMap = {};
+            mindmapData.nodes.forEach(nodeData => {
+                const node = createNode(
+                    nodeData.x, 
+                    nodeData.y, 
+                    nodeData.text, 
+                    nodeData.id, 
+                    nodeData.color || '#3b82f6'
+                );
+                nodesMap[nodeData.id] = node;
+            });
+
+            // Then create connections
+            mindmapData.connections.forEach(conn => {
+                const sourceNode = nodesMap[conn.sourceId];
+                const targetNode = nodesMap[conn.targetId];
+                if (sourceNode && targetNode) {
+                    createConnection(sourceNode, targetNode, conn.label);
+                }
+            });
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm'
+            });
+
+            // Show loading message
+            const loadingMsg = document.createElement('div');
+            loadingMsg.style.position = 'fixed';
+            loadingMsg.style.top = '50%';
+            loadingMsg.style.left = '50%';
+            loadingMsg.style.transform = 'translate(-50%, -50%)';
+            loadingMsg.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            loadingMsg.style.color = 'white';
+            loadingMsg.style.padding = '20px';
+            loadingMsg.style.borderRadius = '5px';
+            loadingMsg.style.zIndex = '10000';
+            loadingMsg.textContent = 'Preparing PDF...';
+            document.body.appendChild(loadingMsg);
+
+            html2canvas(mindmapArea, {
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = doc.internal.pageSize.getWidth();
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                doc.save('mindmap.pdf');
+                
+                // Remove loading message
+                loadingMsg.remove();
+            }).catch(err => {
+                console.error('Error generating PDF:', err);
+                loadingMsg.remove();
+                alert('Error generating PDF. Please try again.');
+            });
+        }
+
+        function clearAll() {
+            if (!confirm('Are you sure you want to clear the entire mindmap? This cannot be undone.')) {
+                return;
+            }
+            
+            // Remove all nodes
+            document.querySelectorAll('.node').forEach(node => {
+                node.remove();
+            });
+            
+            // Remove all connections
+            lines.forEach(line => {
+                if (line.labelElement) {
+                    line.labelElement.remove();
+                }
+                line.remove();
+            });
+            
+            lines = [];
+            selectedNodes = [];
+            nodeCounter = 0;
+            
+            // Clear localStorage
+            localStorage.removeItem('mindmapData');
+            
+            // Create a new default node
+            createNode();
+            
+            // Cancel any active connection mode
+            if (isConnecting) {
+                cancelConnectionMode();
+            }
+        }
+    </script>
+
+    <!--Accesibility widget-->
+  <script src="https://cdn.userway.org/widget.js" data-account="ertbJPpxpJ"></script>
 </body>
-
 </html>
